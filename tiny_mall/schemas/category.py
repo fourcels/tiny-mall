@@ -1,10 +1,11 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel
-from uuid import UUID
 
 
 class CategoryBase(BaseModel):
     name: str
+    parent_id: Optional[int]
 
 
 class CategoryCreate(CategoryBase):
@@ -12,7 +13,7 @@ class CategoryCreate(CategoryBase):
 
 
 class Category(CategoryBase):
-    id: UUID
+    id: int
     name: str
     sort: int
     created_at: datetime

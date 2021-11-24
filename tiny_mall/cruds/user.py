@@ -23,14 +23,14 @@ def create_user(db: Session, user: schemas.UserCreate, is_admin: bool = False):
 def create_balance_log(
     db: Session,
     amount: int,
-    type: models.BalanceLogTypeEnum,
+    type: int,
     db_user: models.User
 ):
     db_user.balance += amount
     db_balance_log = models.BalanceLog(
         user_id=db_user.id,
         amount=amount,
-        type=type.value,
+        type=type,
         current_balance=db_user.balance
     )
 

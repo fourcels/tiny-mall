@@ -17,19 +17,6 @@ class User(Base):
     login_at = Column(DateTime, nullable=True)
 
 
-class BalanceLogTypeEnum(enum.Enum):
-    '''
-    * `1` - 充值
-    * `2` - 支付
-    * `3` - 退款
-    * `4` - 其他
-    '''
-    charge = 1
-    pay = 2
-    refund = 3
-    other = 4
-
-
 class BalanceLog(Base):
     __tablename__ = "balance_logs"
     id = Column(Integer, primary_key=True)

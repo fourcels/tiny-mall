@@ -17,5 +17,5 @@ async def balance_charge(
     db: Session = Depends(deps.get_db),
 ):
     db_balance_log = cruds.user.create_balance_log(
-        db, amount, models.BalanceLogTypeEnum.charge, user)
+        db, amount, schemas.BalanceLogTypeEnum.charge, user)
     return db_balance_log
