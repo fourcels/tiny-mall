@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     admin_username: str = 'admin'
     admin_password: str = 'admin'
     secret_key: str
-    access_token_expire_minutes = 120
+    access_token_expire_days = 30
 
     class Config:
         env_file = ".env"

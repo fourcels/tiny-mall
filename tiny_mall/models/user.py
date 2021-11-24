@@ -1,10 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.expression import null
 
 from tiny_mall.database import Base
 from datetime import datetime
-import uuid
 import enum
 
 
