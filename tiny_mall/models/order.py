@@ -55,7 +55,7 @@ class OrderItem(Base):
 class Order(Base):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True)
-    order_no = Column(BigInteger)
+    order_no = Column(BigInteger, unique=True)
     status = Column(Integer)
     created_at = Column(DateTime, default=datetime.now)
     user_id = Column(Integer, ForeignKey("users.id"))

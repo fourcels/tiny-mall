@@ -1,1 +1,1 @@
-from . import user, shop
+from . import user

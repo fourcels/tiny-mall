@@ -9,8 +9,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 def on_startup():
-    pass
-    # init_db()
+    init_db()
 
 
 @app.get("/")
