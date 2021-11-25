@@ -11,7 +11,7 @@ class CategoryBase(BaseModel):
 
 
 class CategoryCreate(CategoryBase):
-    parent_id: Optional[int]
+    pid: Optional[int]
 
 
 class CategoryUpdate(CategoryBase):
@@ -21,6 +21,7 @@ class CategoryUpdate(CategoryBase):
 class Category(CategoryBase):
     id: int
     name: str
+    type: int
 
     class Config:
         orm_mode = True

@@ -35,6 +35,7 @@ class Product(Base):
     sort = Column(Integer, index=True, default=0)
     status = Column(Boolean, default=True)
     category_id = Column(Integer, ForeignKey("categories.id"))
+    category_root_id = Column(Integer, ForeignKey("categories.id"))
     created_at = Column(DateTime, default=datetime.now)
     attrs = relationship("ProductAttr")
     skus = relationship("ProductSku")

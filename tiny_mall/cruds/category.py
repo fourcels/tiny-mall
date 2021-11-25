@@ -42,7 +42,7 @@ def delete_category(db: Session, category_id: int):
 
 def get_top_categories(db: Session):
     top_categories = db.query(models.Category).\
-        filter(models.Category.parent_id == None).\
+        filter(models.Category.type == 1).\
         order_by(models.Category.id).\
         all()
     return top_categories
@@ -50,7 +50,7 @@ def get_top_categories(db: Session):
 
 def get_categories_by_parent_id(db: Session, parent_id: int):
     categories = db.query(models.Category).\
-        filter(models.Category.parent_id == parent_id).\
+        filter(models.Category.pid == parent_id).\
         order_by(models.Category.id).\
         all()
     return categories

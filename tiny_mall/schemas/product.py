@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
 
+from tiny_mall.models import category
+
 
 class ProductAttrBase(BaseModel):
     name: str
@@ -60,6 +62,7 @@ class Product(ProductBase):
     status: bool
     sort: int
     status: bool
+    category_root_id: int
     created_at: datetime
     attrs: Optional[List[ProductAttr]]
     skus: List[ProductSku]

@@ -12,5 +12,6 @@ class Category(Base):
     image = Column(String)
     bg_image = Column(String)
     bg_color = Column(String)
-    parent_id = Column(Integer, ForeignKey("categories.id"))
+    type = Column(Integer)
+    pid = Column(Integer, ForeignKey("categories.id"))
     children = relationship("Category")
