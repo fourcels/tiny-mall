@@ -172,4 +172,3 @@ INSERT INTO "categories" ("id", "name", "desc", "image", "parent_id", "bg_image"
 INSERT INTO "categories" ("id", "name", "desc", "image", "parent_id", "bg_image", "bg_color") VALUES (176, '羊肉', NULL, NULL, 36, NULL, NULL);
 INSERT INTO "categories" ("id", "name", "desc", "image", "parent_id", "bg_image", "bg_color") VALUES (177, '蹄子', NULL, NULL, 36, NULL, NULL);
 INSERT INTO "categories" ("id", "name", "desc", "image", "parent_id", "bg_image", "bg_color") VALUES (178, '糖醋排骨', NULL, NULL, 36, NULL, NULL);
-INSERT INTO "categories" ("id", "name", "desc", "image", "parent_id", "bg_image", "bg_color") VALUES (179, '第四级分类', NULL, NULL, 37, NULL, NULL);

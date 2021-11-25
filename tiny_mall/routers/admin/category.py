@@ -28,10 +28,10 @@ async def update_category(
     return db_category
 
 
-@router.delete("/{category_id}")
-async def delete_category(
-    category_id: int,
-    db: Session = Depends(get_db),
-):
-    cruds.category.delete_category(db, category_id)
-    return {"ok": True}
+# @router.delete("/{category_id}")
+# async def delete_category(
+#     category_id: int,
+#     db: Session = Depends(get_db),
+# ):
+#     cruds.category.delete_category(db, category_id)
+#     return {"ok": True}

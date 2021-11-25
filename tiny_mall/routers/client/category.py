@@ -16,7 +16,7 @@ async def get_top_categories(db: Session = Depends(get_db)):
     return top_categories
 
 
-@router.get("/{parent_id}", response_model=List[schemas.Category])
+@router.get("/{parent_id}", response_model=List[schemas.CategoryWithChildren])
 async def get_categories_by_parent_id(parent_id: int, db: Session = Depends(get_db)):
     """获取下级商品分组"""
     categories = cruds.category.get_categories_by_parent_id(db, parent_id)
