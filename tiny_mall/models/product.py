@@ -16,8 +16,8 @@ class ProductAttr(Base):
     __tablename__ = "product_attrs"
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    values = relationship("ProductAttrValue")
     product_id = Column(Integer, ForeignKey("products.id"))
+    items = relationship("ProductAttrValue")
 
 
 class ProductSku(Base):

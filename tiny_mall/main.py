@@ -17,6 +17,8 @@ admin_router = APIRouter(
     prefix='/admin', dependencies=[Depends(deps.get_current_active_admin)])
 admin_router.include_router(
     routers.admin.category.router, tags=['admin - 商品分组'])
+admin_router.include_router(
+    routers.admin.product.router, tags=['admin - 商品'])
 app.include_router(admin_router)
 
 client_router = APIRouter(

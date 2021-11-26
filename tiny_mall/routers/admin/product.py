@@ -14,6 +14,5 @@ async def create_product(
     product: schemas.ProductCreate,
     db: Session = Depends(get_db),
 ):
-    pass
-    # db_category = cruds.category.create_category(db, category)
-    # return db_category
+    db_product = cruds.product.create_product(db, product)
+    return db_product

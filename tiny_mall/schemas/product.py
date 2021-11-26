@@ -5,19 +5,32 @@ from pydantic import BaseModel
 from tiny_mall.models import category
 
 
+class ProductAttrValueBase(BaseModel):
+    value: str
+    image: Optional[str]
+
+
+class ProductAttrValueCreate(ProductAttrValueBase):
+    pass
+
+
+class ProductAttrValue(ProductAttrValueBase):
+
+    class Config:
+        orm_mode = True
+
+
 class ProductAttrBase(BaseModel):
     name: str
-    values: List[str]
-    image: Optional[str]
-    product_id: int
 
 
 class ProductAttrCreate(ProductAttrBase):
-    pass
+    items: List[ProductAttrValueCreate]
 
 
 class ProductAttr(ProductAttrBase):
     id: int
+    items: List[ProductAttrValue]
 
     class Config:
         orm_mode = True
@@ -29,7 +42,6 @@ class ProductSkuBase(BaseModel):
     stock: int
     image: Optional[str]
     sn: Optional[str]
-    product_id: int
 
 
 class ProductSkuCreate(ProductSkuBase):
