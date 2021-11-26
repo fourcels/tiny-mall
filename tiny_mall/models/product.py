@@ -4,12 +4,19 @@ from sqlalchemy.orm import relationship
 from tiny_mall.database import Base
 
 
+class ProductAttrValue(Base):
+    __tablename__ = "product_attr_values"
+    id = Column(Integer, primary_key=True)
+    value = Column(String)
+    image = Column(String)
+    product_attr_id = Column(Integer, ForeignKey("product_attrs.id"))
+
+
 class ProductAttr(Base):
     __tablename__ = "product_attrs"
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    values = Column(ARRAY(String))
-    image = Column(String)
+    values = relationship("ProductAttrValue")
     product_id = Column(Integer, ForeignKey("products.id"))
 
 

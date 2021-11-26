@@ -6,12 +6,14 @@ from tiny_mall import libs, models, schemas
 
 
 def create_category(db: Session, category: schemas.CategoryCreate):
-    if category.parent_id is not None:
-        db_category = db.query(models.Category).get(category.parent_id)
-        if not db_category:
+    type = 1
+    if category.pid is not None:
+        p_category = db.query(models.Category).get(category.pid)
+        if not p_category:
             raise HTTPException(
                 status_code=400, detail="Parent category not found")
-    db_category = models.Category(**category.dict())
+        type = p_category.type + 1
+    db_category = models.Category(type=type, **category.dict())
     db.add(db_category)
     db.commit()
     db.refresh(db_category)
