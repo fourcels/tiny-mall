@@ -26,4 +26,8 @@ client_router = APIRouter(
 client_router.include_router(routers.client.user.router, tags=['client - 用户'])
 client_router.include_router(
     routers.client.category.router, tags=['client - 商品分组'])
+client_router.include_router(
+    routers.client.address.router, tags=['client - 用户地址'])
+client_router.include_router(
+    routers.client.order.router, tags=['client - 订单'])
 app.include_router(client_router)

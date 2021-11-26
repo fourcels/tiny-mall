@@ -16,3 +16,13 @@ async def create_product(
 ):
     db_product = cruds.product.create_product(db, product)
     return db_product
+
+
+@router.get("/category/{category_id}", response_model=List[schemas.Product])
+async def get_products_by_category_id(
+    category_id: int,
+    db: Session = Depends(get_db),
+):
+    """根据分组id获取商品"""
+    products = cruds.product.get_products_by_category_id(db, category_id)
+    return products

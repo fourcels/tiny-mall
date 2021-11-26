@@ -2,6 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel
+from pydantic.fields import Field
 
 
 class OrderPaymentTypeEnum(Enum):
@@ -42,10 +43,16 @@ class OrderAddress(BaseModel):
     location: str
     detail: str
 
+    class Config:
+        orm_mode = True
+
 
 class OrderLog(BaseModel):
     name: str
     created_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class OrderPayment(BaseModel):
@@ -53,15 +60,21 @@ class OrderPayment(BaseModel):
     amount: int
     created_at: datetime
 
+    class Config:
+        orm_mode = True
+
 
 class OrderRefund(BaseModel):
     reason: str
     created_at: datetime
 
+    class Config:
+        orm_mode = True
+
 
 class OrderItemBase(BaseModel):
     product_sku_id: int
-    num: int
+    num: int = Field(1, gt=0)
 
 
 class OrderItemCreate(OrderItemBase):
@@ -71,10 +84,14 @@ class OrderItemCreate(OrderItemBase):
 class OrderItem(OrderItemBase):
     product_id: int
     product_name: str
+    product_sku_id: int
     product_sku_name: str
     price: int
     num: int
     total_price: int
+
+    class Config:
+        orm_mode = True
 
 
 class OrderBase(BaseModel):
@@ -88,8 +105,9 @@ class OrderCreate(OrderBase):
 
 class Order(OrderBase):
     id: int
-    order_no: int
+    order_no: str
     status: OrderStatusEnum
+    amount: int
     user_id: int
     created_at: datetime
     address: OrderAddress

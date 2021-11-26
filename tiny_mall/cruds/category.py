@@ -42,7 +42,7 @@ def delete_category(db: Session, category_id: int):
     db.commit()
 
 
-def get_top_categories(db: Session):
+def get_root_categories(db: Session):
     top_categories = db.query(models.Category).\
         filter(models.Category.type == 1).\
         order_by(models.Category.id).\
@@ -50,9 +50,9 @@ def get_top_categories(db: Session):
     return top_categories
 
 
-def get_categories_by_parent_id(db: Session, parent_id: int):
+def get_categories_by_pid(db: Session, pid: int):
     categories = db.query(models.Category).\
-        filter(models.Category.pid == parent_id).\
+        filter(models.Category.pid == pid).\
         order_by(models.Category.id).\
         all()
     return categories

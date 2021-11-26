@@ -1,8 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
-
-from tiny_mall.models import category
+from pydantic.fields import Field
 
 
 class ProductAttrValueBase(BaseModel):
@@ -38,8 +37,8 @@ class ProductAttr(ProductAttrBase):
 
 class ProductSkuBase(BaseModel):
     name: str
-    price: int
-    stock: int
+    price: int = Field(100, gt=0)
+    stock: int = Field(10000, ge=0)
     image: Optional[str]
     sn: Optional[str]
 
