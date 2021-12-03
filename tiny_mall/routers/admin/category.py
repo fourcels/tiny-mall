@@ -9,6 +9,14 @@ from tiny_mall.deps import get_current_user, get_db
 router = APIRouter(prefix="/categories")
 
 
+@router.get("/", response_model=List[schemas.Category])
+async def get_categories(
+    db: Session = Depends(get_db),
+):
+    db_categories = cruds.category.get_categories(db)
+    return db_categories
+
+
 @router.post("/", response_model=schemas.Category)
 async def create_category(
     category: schemas.CategoryCreate,
@@ -28,10 +36,10 @@ async def update_category(
     return db_category
 
 
-# @router.delete("/{category_id}")
-# async def delete_category(
-#     category_id: int,
-#     db: Session = Depends(get_db),
-# ):
-#     cruds.category.delete_category(db, category_id)
-#     return {"ok": True}
+@router.delete("/{category_id}")
+async def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db),
+):
+    cruds.category.delete_category(db, category_id)
+    return {"ok": True}

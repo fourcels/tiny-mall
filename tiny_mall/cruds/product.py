@@ -15,20 +15,11 @@ def create_sku(sku: schemas.ProductSkuCreate):
     return models.ProductSku(**sku.dict())
 
 
-def get_category_root_id(db: Session, category: models.Category):
-    if not category.pid:
-        return category.id
-    db_category = db.query(models.Category).get(category.pid)
-    return get_category_root_id(db, db_category)
-
-
 def create_product(db: Session, product: schemas.ProductCreate):
     db_category = db.query(models.Category).get(product.category_id)
     if not db_category:
         raise HTTPException(
             status_code=400, detail="category not found")
-
-    category_root_id = get_category_root_id(db, db_category)
 
     attrs = [create_attr(item) for item in product.attrs] \
         if product.attrs else []
@@ -38,7 +29,6 @@ def create_product(db: Session, product: schemas.ProductCreate):
     db_product = models.Product(
         attrs=attrs,
         skus=skus,
-        category_root_id=category_root_id,
         **product.dict(exclude={'attrs', 'skus'})
     )
 

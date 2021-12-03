@@ -4,14 +4,10 @@ from pydantic import BaseModel
 
 class CategoryBase(BaseModel):
     name: str
-    desc: Optional[str]
-    image: Optional[str]
-    bg_image: Optional[str]
-    bg_color: Optional[str]
 
 
 class CategoryCreate(CategoryBase):
-    pid: Optional[int]
+    pass
 
 
 class CategoryUpdate(CategoryBase):
@@ -21,7 +17,8 @@ class CategoryUpdate(CategoryBase):
 class Category(CategoryBase):
     id: int
     name: str
-    type: int
+    sort: int
+    product_count: int
 
     class Config:
         orm_mode = True

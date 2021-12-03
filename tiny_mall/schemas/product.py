@@ -73,7 +73,6 @@ class Product(ProductBase):
     status: bool
     sort: int
     status: bool
-    category_root_id: int
     created_at: datetime
     attrs: Optional[List[ProductAttr]]
     skus: List[ProductSku]
