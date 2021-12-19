@@ -28,7 +28,6 @@ class User(UserBase):
     id: int
     is_active: bool
     created_at: datetime
-    login_at: datetime
     balance: int
 
     class Config:

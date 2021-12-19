@@ -38,8 +38,3 @@ def create_balance_log(
     db.commit()
     db.refresh(db_user)
     return db_balance_log
-
-
-def update_login_at(db: Session, db_user: models.User):
-    db_user.login_at = datetime.now()
-    db.commit()

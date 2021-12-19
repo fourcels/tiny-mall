@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds
-from tiny_mall.deps import get_current_user, get_db
+from tiny_mall.deps import PaginateParams, get_current_user, get_db
 
 
 router = APIRouter(prefix="/categories")
@@ -12,9 +12,15 @@ router = APIRouter(prefix="/categories")
 @router.get("/", response_model=List[schemas.Category])
 async def get_categories(
     db: Session = Depends(get_db),
+    params: PaginateParams = Depends(PaginateParams)
 ):
-    db_categories = cruds.category.get_categories(db)
-    return db_categories
+    query = db.\
+        query(models.Category).\
+        order_by(
+            models.Category.sort.desc(),
+            models.Category.id
+        )
+    return params.paginate(query)
 
 
 @router.post("/", response_model=schemas.Category)

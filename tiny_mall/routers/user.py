@@ -2,16 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from tiny_mall import schemas, cruds, libs, deps
+from tiny_mall import models, schemas, cruds, libs, deps
 
-router = APIRouter()
+router = APIRouter(prefix="/users")
 
 
-@router.post("/signup", response_model=schemas.User)
-async def signup(
+@router.post("/register", response_model=schemas.User)
+async def register(
     user: schemas.UserCreate,
     db: Session = Depends(deps.get_db),
 ):
+    """注册"""
     db_user = cruds.user.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(
@@ -19,8 +20,8 @@ async def signup(
     return cruds.user.create_user(db=db, user=user)
 
 
-@router.post("/login")
-async def login(
+@router.post("/authenticate")
+async def authenticate(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(deps.get_db),
 ):
@@ -34,9 +35,16 @@ async def login(
     access_token = libs.security.create_access_token(
         data={"sub": str(db_user.id)}
     )
-    cruds.user.update_login_at(db, db_user)
 
     return {
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+@router.get("/info", response_model=schemas.User)
+async def info(
+    db: Session = Depends(deps.get_db),
+    user: models.User = Depends(deps.get_current_user)
+):
+    return user

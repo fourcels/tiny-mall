@@ -1,9 +1,22 @@
-from fastapi import FastAPI
-from fastapi.params import Depends
+from fastapi import FastAPI, Depends
 from fastapi.routing import APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from tiny_mall import deps, routers
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Total"]
+)
 
 
 @app.get("/")
@@ -11,7 +24,7 @@ async def root():
     return {"message": "Hello World"}
 
 
-app.include_router(routers.login.router, tags=['登录'])
+app.include_router(routers.user.router, tags=['用户'])
 
 admin_router = APIRouter(
     prefix='/admin', dependencies=[Depends(deps.get_current_active_admin)])

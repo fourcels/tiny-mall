@@ -1,13 +1,14 @@
 from fastapi.exceptions import HTTPException
+from fastapi.param_functions import Query
 from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import status
+from fastapi import status, Response
 from jose.exceptions import JWTError
 from tiny_mall.database import SessionLocal
 from tiny_mall import models, libs
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/authenticate")
 
 
 # Dependency
@@ -46,3 +47,26 @@ async def get_current_active_admin(current_user: models.User = Depends(get_curre
     if not current_user.is_admin:
         raise HTTPException(status_code=400, detail="Invalid admin")
     return current_user
+
+
+class PaginateParams:
+    def __init__(
+        self,
+        response: Response,
+        page: int = Query(1, ge=1),
+        page_size: int = Query(10, ge=1, le=100),
+    ):
+        self.response = response
+        self.page = page
+        self.page_size = page_size
+
+    def paginate(
+        self,
+        query,
+    ):
+        items = query.limit(self.page_size).offset(
+            (self.page - 1) * self.page_size).all()
+        total = query.order_by(None).count()
+
+        self.response.headers["X-Total"] = str(total)
+        return items
