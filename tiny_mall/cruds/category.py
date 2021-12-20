@@ -23,7 +23,7 @@ def create_category(db: Session, category: schemas.CategoryCreate):
     db_category = get_category_by_name(db, category.name)
     if db_category:
         raise HTTPException(
-            status_code=400, detail="Category name already exist")
+            status_code=400, detail="商品名称已存在")
     db_category = models.Category(**category.dict())
     db.add(db_category)
     db.commit()
@@ -34,7 +34,12 @@ def create_category(db: Session, category: schemas.CategoryCreate):
 def update_category(db: Session, category_id: int, category: schemas.CategoryUpdate):
     db_category = db.query(models.Category).get(category_id)
     if not db_category:
-        raise HTTPException(status_code=400, detail="Category not found")
+        raise HTTPException(status_code=400, detail="商品分类不存在")
+    if category.name and db_category.name != category.name:
+        db_category2 = get_category_by_name(db, category.name)
+        if db_category2:
+            raise HTTPException(
+                status_code=400, detail="商品名称已存在")
     category_data = category.dict(exclude_unset=True)
     for key, value in category_data.items():
         setattr(db_category, key, value)

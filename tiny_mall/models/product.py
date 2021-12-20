@@ -41,7 +41,10 @@ class Product(Base):
     sales = Column(Integer, default=0)
     sort = Column(Integer, index=True, default=0)
     status = Column(Boolean, default=True)
-    category_id = Column(Integer, ForeignKey("categories.id"))
+    category_id = Column(
+        Integer,
+        ForeignKey("categories.id", ondelete='SET NULL')
+    )
     created_at = Column(DateTime, default=datetime.now)
     attrs = relationship("ProductAttr")
     skus = relationship("ProductSku")
