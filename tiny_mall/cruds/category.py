@@ -7,7 +7,7 @@ from tiny_mall import libs, models, schemas
 
 def get_categories(db: Session):
     db_categories = db.query(models.Category).\
-        order_by(models.Category.sort.desc()).\
+        order_by(models.Category.sort.desc(), models.Category.id).\
         all()
     return db_categories
 

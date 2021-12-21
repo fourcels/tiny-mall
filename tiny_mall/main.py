@@ -2,8 +2,11 @@ from fastapi import FastAPI, Depends
 from fastapi.routing import APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from tiny_mall import deps, routers
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 origins = [
     "http://localhost:3000",
@@ -25,6 +28,7 @@ async def root():
 
 
 app.include_router(routers.user.router, tags=['用户'])
+app.include_router(routers.file.router, tags=['上传'])
 
 admin_router = APIRouter(
     prefix='/admin', dependencies=[Depends(deps.get_current_active_admin)])

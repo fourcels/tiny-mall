@@ -23,6 +23,13 @@ async def get_categories(
     return params.paginate(query)
 
 
+@router.get("/all", response_model=List[schemas.Category])
+async def get_all_categories(
+    db: Session = Depends(get_db),
+):
+    return cruds.category.get_categories(db)
+
+
 @router.post("/", response_model=schemas.Category)
 async def create_category(
     category: schemas.CategoryCreate,
