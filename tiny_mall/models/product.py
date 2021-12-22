@@ -1,23 +1,8 @@
 from datetime import datetime
-from sqlalchemy import Column, ForeignKey, ARRAY, Boolean, DateTime, Integer, String
+from sqlalchemy import Column, ForeignKey, ARRAY, Boolean, DateTime, Integer, String, JSON
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from tiny_mall.database import Base
-
-
-class ProductAttrValue(Base):
-    __tablename__ = "product_attr_values"
-    id = Column(Integer, primary_key=True)
-    value = Column(String)
-    image = Column(String)
-    product_attr_id = Column(Integer, ForeignKey("product_attrs.id"))
-
-
-class ProductAttr(Base):
-    __tablename__ = "product_attrs"
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    product_id = Column(Integer, ForeignKey("products.id"))
-    items = relationship("ProductAttrValue")
 
 
 class ProductSku(Base):
@@ -46,5 +31,5 @@ class Product(Base):
         ForeignKey("categories.id", ondelete='SET NULL')
     )
     created_at = Column(DateTime, default=datetime.now)
-    attrs = relationship("ProductAttr")
+    attrs = Column(JSONB)
     skus = relationship("ProductSku")

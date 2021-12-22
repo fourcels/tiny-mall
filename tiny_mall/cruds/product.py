@@ -6,30 +6,23 @@ from sqlalchemy.orm import Session
 from tiny_mall import libs, models, schemas
 
 
-def create_attr(attr: schemas.ProductAttrCreate):
-    items = [models.ProductAttrValue(**item.dict()) for item in attr.items]
-    return models.ProductAttr(items=items, **attr.dict(exclude={'items'}))
-
-
 def create_sku(sku: schemas.ProductSkuCreate):
     return models.ProductSku(**sku.dict())
 
 
 def create_product(db: Session, product: schemas.ProductCreate):
-    db_category = db.query(models.Category).get(product.category_id)
-    if not db_category:
-        raise HTTPException(
-            status_code=400, detail="category not found")
+    if product.category_id is not None:
+        db_category = db.query(models.Category).get(product.category_id)
+        if not db_category:
+            raise HTTPException(
+                status_code=400, detail="商品分类不存在")
 
-    attrs = [create_attr(item) for item in product.attrs] \
-        if product.attrs else []
     skus = [create_sku(item) for item in product.skus] \
         if product.skus else []
 
     db_product = models.Product(
-        attrs=attrs,
         skus=skus,
-        **product.dict(exclude={'attrs', 'skus'})
+        **product.dict(exclude={'skus'})
     )
 
     db.add(db_product)

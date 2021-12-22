@@ -15,6 +15,7 @@ async def create_product(
     db: Session = Depends(get_db),
 ):
     db_product = cruds.product.create_product(db, product)
+    print(db_product.attrs)
     return db_product
 
 

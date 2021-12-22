@@ -1,38 +1,17 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 from pydantic import BaseModel
-from pydantic.fields import Field
+from pydantic.fields import Field, Json
 
 
-class ProductAttrValueBase(BaseModel):
+class ProductAttrItem(BaseModel):
     value: str
     image: Optional[str]
 
 
-class ProductAttrValueCreate(ProductAttrValueBase):
-    pass
-
-
-class ProductAttrValue(ProductAttrValueBase):
-
-    class Config:
-        orm_mode = True
-
-
-class ProductAttrBase(BaseModel):
+class ProductAttr(BaseModel):
     name: str
-
-
-class ProductAttrCreate(ProductAttrBase):
-    items: List[ProductAttrValueCreate]
-
-
-class ProductAttr(ProductAttrBase):
-    id: int
-    items: List[ProductAttrValue]
-
-    class Config:
-        orm_mode = True
+    items: List[ProductAttrItem]
 
 
 class ProductSkuBase(BaseModel):
@@ -59,11 +38,11 @@ class ProductBase(BaseModel):
     desc: Optional[str]
     detail: Optional[str]
     images: Optional[List[str]]
-    category_id: int
+    attrs: Optional[List[ProductAttr]]
+    category_id: Optional[int]
 
 
 class ProductCreate(ProductBase):
-    attrs: Optional[List[ProductAttrCreate]]
     skus: List[ProductSkuCreate]
 
 
@@ -74,7 +53,6 @@ class Product(ProductBase):
     sort: int
     status: bool
     created_at: datetime
-    attrs: Optional[List[ProductAttr]]
     skus: List[ProductSku]
 
     class Config:
