@@ -2,11 +2,11 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy import select, func
 from sqlalchemy.orm import column_property
-from tiny_mall.models.base import BaseModel
+from tiny_mall.models.base import Base
 from tiny_mall.models.product import Product
 
 
-class Category(BaseModel):
+class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
