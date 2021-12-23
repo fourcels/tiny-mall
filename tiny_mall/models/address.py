@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean
-from tiny_mall.database import Base
+from tiny_mall.models.base import BaseModel
 
 
-class Address(Base):
+class Address(BaseModel):
     __tablename__ = "addresses"
     id = Column(Integer, primary_key=True)
     name = Column(String)

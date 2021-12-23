@@ -6,10 +6,6 @@ from sqlalchemy.orm import Session
 from tiny_mall import libs, models, schemas
 
 
-def create_sku(sku: schemas.ProductSkuCreate):
-    return models.ProductSku(**sku.dict())
-
-
 def create_product(db: Session, product: schemas.ProductCreate):
     if product.category_id is not None:
         db_category = db.query(models.Category).get(product.category_id)
@@ -17,13 +13,7 @@ def create_product(db: Session, product: schemas.ProductCreate):
             raise HTTPException(
                 status_code=400, detail="商品分类不存在")
 
-    skus = [create_sku(item) for item in product.skus] \
-        if product.skus else []
-
-    db_product = models.Product(
-        skus=skus,
-        **product.dict(exclude={'skus'})
-    )
+    db_product = models.Product(**product.dict())
 
     db.add(db_product)
     db.commit()

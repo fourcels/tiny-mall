@@ -1,10 +1,10 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, BigInteger
 from sqlalchemy.orm import relationship
-from tiny_mall.database import Base
+from tiny_mall.models.base import BaseModel
 
 
-class OrderAddress(Base):
+class OrderAddress(BaseModel):
     __tablename__ = "order_addresses"
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -14,7 +14,7 @@ class OrderAddress(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
 
 
-class OrderLog(Base):
+class OrderLog(BaseModel):
     __tablename__ = "order_logs"
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -22,7 +22,7 @@ class OrderLog(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
 
 
-class OrderPayment(Base):
+class OrderPayment(BaseModel):
     __tablename__ = "order_payments"
     id = Column(Integer, primary_key=True)
     type = Column(Integer)
@@ -31,7 +31,7 @@ class OrderPayment(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
 
 
-class OrderRefund(Base):
+class OrderRefund(BaseModel):
     __tablename__ = "order_refunds"
     id = Column(Integer, primary_key=True)
     reason = Column(String)
@@ -39,7 +39,7 @@ class OrderRefund(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
 
 
-class OrderItem(Base):
+class OrderItem(BaseModel):
     __tablename__ = "order_items"
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey("products.id"))
@@ -52,7 +52,7 @@ class OrderItem(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
 
 
-class Order(Base):
+class Order(BaseModel):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True)
     order_no = Column(BigInteger, unique=True)

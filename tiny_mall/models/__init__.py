@@ -1,4 +1,4 @@
-from tiny_mall.database import Base
+from .base import Base
 from .user import User, BalanceLog
 from .category import Category
 from .product import Product, ProductSku

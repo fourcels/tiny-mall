@@ -2,10 +2,10 @@ from datetime import datetime
 from sqlalchemy import Column, ForeignKey, ARRAY, Boolean, DateTime, Integer, String, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from tiny_mall.database import Base
+from tiny_mall.models.base import BaseModel
 
 
-class ProductSku(Base):
+class ProductSku(BaseModel):
     __tablename__ = "product_skus"
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -16,7 +16,7 @@ class ProductSku(Base):
     product_id = Column(Integer, ForeignKey("products.id"))
 
 
-class Product(Base):
+class Product(BaseModel):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True)
     name = Column(String)

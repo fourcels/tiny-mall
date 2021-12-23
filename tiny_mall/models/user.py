@@ -1,11 +1,11 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 
-from tiny_mall.database import Base
 from datetime import datetime
-import enum
+
+from tiny_mall.models.base import BaseModel
 
 
-class User(Base):
+class User(BaseModel):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
@@ -17,7 +17,7 @@ class User(Base):
     login_at = Column(DateTime, nullable=True)
 
 
-class BalanceLog(Base):
+class BalanceLog(BaseModel):
     __tablename__ = "balance_logs"
     id = Column(Integer, primary_key=True)
     type = Column(Integer)
