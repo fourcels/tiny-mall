@@ -12,7 +12,7 @@ class CategoryCreate(CategoryBase):
 
 class CategoryUpdate(CategoryBase):
     name: Optional[str]
-    sort: Optional[str]
+    sort: Optional[int]
 
 
 class Category(CategoryBase):
