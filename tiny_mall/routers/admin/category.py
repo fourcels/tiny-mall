@@ -12,7 +12,7 @@ router = APIRouter(prefix="/categories")
 @router.get("/", response_model=List[schemas.Category])
 async def get_categories(
     db: Session = Depends(get_db),
-    params: PaginateParams = Depends(PaginateParams)
+    params: PaginateParams = Depends()
 ):
     query = db.\
         query(models.Category).\

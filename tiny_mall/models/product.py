@@ -13,7 +13,7 @@ class ProductSku(Base):
     stock = Column(Integer)
     image = Column(String)
     sn = Column(String)
-    product_id = Column(Integer, ForeignKey("products.id"))
+    product_id = Column(Integer, ForeignKey("products.id", ondelete='CASCADE'))
 
 
 class Product(Base):
@@ -30,6 +30,7 @@ class Product(Base):
         Integer,
         ForeignKey("categories.id", ondelete='SET NULL')
     )
+    category = relationship("Category")
     created_at = Column(DateTime, default=datetime.now)
     attrs = Column(JSONB)
     skus = relationship("ProductSku")

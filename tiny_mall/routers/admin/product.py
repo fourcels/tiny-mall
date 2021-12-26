@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds
-from tiny_mall.deps import get_db
+from tiny_mall.deps import PaginateParams, get_db
 
 
 router = APIRouter(prefix="/products")
@@ -19,11 +19,26 @@ async def create_product(
     return db_product
 
 
-@router.get("/category/{category_id}", response_model=List[schemas.Product])
-async def get_products_by_category_id(
-    category_id: int,
+@router.get("/", response_model=List[schemas.Product])
+async def get_products(
+    db: Session = Depends(get_db),
+    params: PaginateParams = Depends()
+):
+    """获取商品列表"""
+    query = db.\
+        query(models.Product).\
+        order_by(
+            models.Product.sort.desc(),
+            models.Product.id
+        )
+    return params.paginate(query)
+
+
+@router.patch("/{product_id}", response_model=schemas.Product)
+async def update_product(
+    product_id: int,
+    product: schemas.ProductUpdate,
     db: Session = Depends(get_db),
 ):
-    """根据分组id获取商品"""
-    products = cruds.product.get_products_by_category_id(db, category_id)
-    return products
+    db_product = cruds.product.update_product(db, product_id, product)
+    return db_product
