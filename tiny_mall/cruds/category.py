@@ -39,7 +39,7 @@ def update_category(db: Session, category_id: int, category: schemas.CategoryUpd
         db_category2 = get_category_by_name(db, category.name)
         if db_category2:
             raise HTTPException(
-                status_code=400, detail="商品名称已存在")
+                status_code=400, detail="分类名称已存在")
     category_data = category.dict(exclude_unset=True)
     for key, value in category_data.items():
         setattr(db_category, key, value)
@@ -52,7 +52,7 @@ def update_category(db: Session, category_id: int, category: schemas.CategoryUpd
 def delete_category(db: Session, category_id: int):
     db_category = db.query(models.Category).get(category_id)
     if not db_category:
-        raise HTTPException(status_code=400, detail="Category not found")
+        raise HTTPException(status_code=400, detail="商品分类不存在")
 
     db.delete(db_category)
     db.commit()

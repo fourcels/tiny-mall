@@ -3,18 +3,17 @@ from fastapi.routing import APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from tiny_mall import deps, routers
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse
+from starlette.middleware.errors import ServerErrorMiddleware
+
 
 app = FastAPI()
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-origins = [
-    "http://localhost:3000",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

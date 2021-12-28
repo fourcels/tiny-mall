@@ -38,7 +38,7 @@ class ProductBase(BaseModel):
     name: str
     desc: Optional[str]
     detail: Optional[str]
-    images: Optional[List[str]] = []
+    images: List[str] = []
     attrs: Optional[List[ProductAttr]]
     category_id: Optional[int]
 

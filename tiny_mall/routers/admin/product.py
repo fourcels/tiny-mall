@@ -15,7 +15,6 @@ async def create_product(
     db: Session = Depends(get_db),
 ):
     db_product = cruds.product.create_product(db, product)
-    print(db_product.attrs)
     return db_product
 
 
@@ -30,7 +29,8 @@ async def get_products(
         order_by(
             models.Product.sort.desc(),
             models.Product.id
-        )
+        ).\
+        filter(models.Product.deleted_at == None)
     return params.paginate(query)
 
 
@@ -42,3 +42,12 @@ async def update_product(
 ):
     db_product = cruds.product.update_product(db, product_id, product)
     return db_product
+
+
+@router.delete("/{product_id}")
+async def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+):
+    cruds.product.delete_product(db, product_id)
+    return {"ok": True}

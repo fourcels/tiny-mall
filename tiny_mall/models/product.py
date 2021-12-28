@@ -32,5 +32,6 @@ class Product(Base):
     )
     category = relationship("Category")
     created_at = Column(DateTime, default=datetime.now)
+    deleted_at = Column(DateTime)
     attrs = Column(JSONB)
     skus = relationship("ProductSku")
