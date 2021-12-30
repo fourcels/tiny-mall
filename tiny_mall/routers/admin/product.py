@@ -34,6 +34,15 @@ async def get_products(
     return params.paginate(query)
 
 
+@router.get("/{product_id}", response_model=schemas.Product)
+async def get_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+):
+    """获取商品详情"""
+    return cruds.product.get_product(db, product_id)
+
+
 @router.patch("/{product_id}", response_model=schemas.Product)
 async def update_product(
     product_id: int,

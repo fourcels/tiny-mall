@@ -11,15 +11,6 @@ app = FastAPI()
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["X-Total"]
-)
-
 
 @app.get("/")
 async def root():
@@ -47,3 +38,14 @@ client_router.include_router(
 client_router.include_router(
     routers.client.order.router, tags=['client - 订单'])
 app.include_router(client_router)
+
+
+# cors issue https://github.com/encode/starlette/issues/1116
+app = CORSMiddleware(
+    app=app,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Total"]
+)

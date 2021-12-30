@@ -13,7 +13,7 @@ class Category(Base):
     sort = Column(Integer, default=0)
     product_count = column_property(
         select(func.count(Product.id)).
-        where(Product.category_id == id).
+        where(Product.category_id == id, Product.deleted_at == None).
         correlate_except(Product).
         scalar_subquery()
     )

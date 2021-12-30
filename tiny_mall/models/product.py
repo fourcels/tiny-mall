@@ -34,4 +34,4 @@ class Product(Base):
     created_at = Column(DateTime, default=datetime.now)
     deleted_at = Column(DateTime)
     attrs = Column(JSONB)
-    skus = relationship("ProductSku")
+    skus = relationship("ProductSku", cascade="all, delete-orphan")
