@@ -28,21 +28,6 @@ def create_product(db: Session, product: schemas.ProductCreate):
     return db_product
 
 
-def generate_skus(current_skus: List[models.ProductSku], data: List[schemas.ProductSkuCreate]):
-    res = []
-    for item in data:
-        sku = next(
-            (item2 for item2 in current_skus if item2.name == item.name), None)
-        if not sku:
-            sku = models.ProductSku(**item.dict())
-        else:
-            item_data = item.dict()
-            for key, value in item_data.items():
-                setattr(sku, key, value)
-        res.append(sku)
-    return res
-
-
 def update_product(db: Session, product_id: int, product: schemas.ProductUpdate):
     db_product = db.query(models.Product).get(product_id)
     if not db_product:
@@ -51,10 +36,24 @@ def update_product(db: Session, product_id: int, product: schemas.ProductUpdate)
     product.category_id = check_category(db, product.category_id)
 
     product_data = product.dict(exclude_unset=True)
-    for key, value in product_data.items():
-        if key == 'skus':
-            value = generate_skus(db_product.skus, product.skus)
-        setattr(db_product, key, value)
+    model_columns = db_product.__mapper__.columns
+    relationships = db_product.__mapper__.relationships
+    for key, val in product_data.items():
+        if key in model_columns:
+            setattr(db_product, key, val)
+            continue
+
+        if key in relationships:
+            relation_cls = relationships[key].mapper.entity
+
+            if isinstance(val, list):
+                instances = [relation_cls(**elem) for elem in val]
+                setattr(db_product, key, instances)
+
+            elif isinstance(val, dict):
+                instance = relation_cls(**val)
+                setattr(db_product, key, instance)
+
     db.add(db_product)
     db.commit()
     db.refresh(db_product)

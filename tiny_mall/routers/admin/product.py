@@ -1,9 +1,11 @@
 from typing import List
 from fastapi import APIRouter, Depends
+from fastapi.params import Query
 from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds
 from tiny_mall.deps import PaginateParams, get_db
+from tiny_mall.models.product import ProductSku
 
 
 router = APIRouter(prefix="/products")
@@ -20,17 +22,33 @@ async def create_product(
 
 @router.get("/", response_model=List[schemas.Product])
 async def get_products(
+    *,
     db: Session = Depends(get_db),
-    params: PaginateParams = Depends()
+    params: PaginateParams = Depends(),
+    name: str = None,
+    category_id: int = None,
+    status: bool = None,
+    sn: str = None,
 ):
     """获取商品列表"""
+    filter = []
+    if name is not None:
+        filter.append(models.Product.name.contains(name))
+    if category_id is not None:
+        filter.append(models.Product.category_id == category_id)
+    if status is not None:
+        filter.append(models.Product.status == status)
+    if sn is not None:
+        filter.append(models.Product.skus.any(
+            models.ProductSku.sn.contains(sn)))
+
     query = db.\
         query(models.Product).\
         order_by(
             models.Product.sort.desc(),
             models.Product.id
         ).\
-        filter(models.Product.deleted_at == None)
+        filter(models.Product.deleted_at == None, *filter)
     return params.paginate(query)
 
 

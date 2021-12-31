@@ -27,6 +27,10 @@ class ProductSkuCreate(ProductSkuBase):
     pass
 
 
+class ProductSkuUpdate(ProductSkuBase):
+    id: Optional[int]
+
+
 class ProductSku(ProductSkuBase):
     id: int
 
@@ -54,7 +58,7 @@ class ProductUpdate(BaseModel):
     images: Optional[List[str]]
     sort: Optional[int]
     status: Optional[bool]
-    skus: Optional[List[ProductSkuCreate]]
+    skus: Optional[List[ProductSkuUpdate]]
     attrs: Optional[List[ProductAttr]]
     category_id: Optional[int]
 
