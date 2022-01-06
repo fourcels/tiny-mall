@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import List
 from fastapi.exceptions import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
+from sqlalchemy.sql.functions import func
 
 from tiny_mall import libs, models, schemas
 
@@ -69,3 +70,18 @@ def get_order(db: Session, order_no: int, user: models.User):
         raise HTTPException(status_code=400, detail="订单不存在")
 
     return db_order
+
+
+def get_stats(db: Session, day: int):
+    offs = aliased(func.generate_series(0, day - 1))
+    d = db.\
+        query(func.to_char(func.current_date() - offs.table_valued(), 'YYYY-MM-DD').label('date')).\
+        select_from(offs).\
+        subquery()
+    return db.\
+        query(func.substr(d.c.date, 6).label('date'), func.count(models.Order.id).label('count')).\
+        select_from(d).\
+        outerjoin(models.Order, d.c.date == func.to_char(models.Order.created_at, 'YYYY-MM-DD')).\
+        group_by(d.c.date).\
+        order_by(d.c.date).\
+        all()

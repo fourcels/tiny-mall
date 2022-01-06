@@ -49,6 +49,14 @@ async def get_orders(
     return params.paginate(query)
 
 
+@router.get("/stats", response_model=List[schemas.OrderStats])
+async def get_stats(
+    db: Session = Depends(get_db),
+    day: int = 7
+):
+    return cruds.order.get_stats(db, day)
+
+
 @router.get("/{order_no}", response_model=schemas.Order)
 async def get_order(
     order_no: str,

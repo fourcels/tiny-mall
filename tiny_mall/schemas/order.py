@@ -116,3 +116,8 @@ class Order(OrderBase):
 
     class Config:
         orm_mode = True
+
+
+class OrderStats(BaseModel):
+    date: str
+    count: int
