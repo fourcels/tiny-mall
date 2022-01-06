@@ -21,12 +21,15 @@ def _declarative_constructor(self, **kwargs):
             relation_cls = relationships[key].mapper.entity
 
             if isinstance(val, list):
-                instances = [relation_cls(**elem) for elem in val]
+                instances = [elem if isinstance(
+                    elem, relation_cls) else relation_cls(**elem) for elem in val]
                 setattr(self, key, instances)
 
             elif isinstance(val, dict):
                 instance = relation_cls(**val)
                 setattr(self, key, instance)
+            else:
+                setattr(self, key, val)
 
 
 Base = declarative_base(constructor=_declarative_constructor)

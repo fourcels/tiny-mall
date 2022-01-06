@@ -26,6 +26,8 @@ admin_router.include_router(
     routers.admin.category.router, tags=['admin - 商品分组'])
 admin_router.include_router(
     routers.admin.product.router, tags=['admin - 商品'])
+admin_router.include_router(
+    routers.admin.order.router, tags=['admin - 订单'])
 app.include_router(admin_router)
 
 client_router = APIRouter(

@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel
 from pydantic.fields import Field
+from .user import User
 
 
 class OrderPaymentTypeEnum(Enum):
@@ -23,18 +24,16 @@ class OrderStatusEnum(Enum):
     * `1` - 待支付
     * `2` - 待发货
     * `3` - 待收货
-    * `4` - 待评价
-    * `10` - 已完成
-    * `11` - 已取消
-    * `12` - 已退款
+    * `4` - 退款中
+    * `10` - 交易完成
+    * `11` - 交易取消
     '''
     pending = 1
     processing = 2
-    delivered = 3
-    arrived = 4
+    shipping = 3
+    refunding = 4
     finished = 10
     canceled = 11
-    refunded = 12
 
 
 class OrderAddress(BaseModel):
@@ -72,22 +71,18 @@ class OrderRefund(BaseModel):
         orm_mode = True
 
 
-class OrderItemBase(BaseModel):
+class OrderItemCreate(BaseModel):
     product_sku_id: int
     num: int = Field(1, gt=0)
 
 
-class OrderItemCreate(OrderItemBase):
-    pass
-
-
-class OrderItem(OrderItemBase):
+class OrderItem(BaseModel):
     product_id: int
     product_name: str
-    product_sku_id: int
     product_sku_name: str
     price: int
     num: int
+    image: Optional[str]
     total_price: int
 
     class Config:
@@ -101,6 +96,7 @@ class OrderBase(BaseModel):
 class OrderCreate(OrderBase):
     address_id: int
     items: List[OrderItemCreate]
+    remarks: Optional[str]
 
 
 class Order(OrderBase):
@@ -108,6 +104,7 @@ class Order(OrderBase):
     order_no: str
     status: OrderStatusEnum
     amount: int
+    remarks: Optional[str]
     user_id: int
     created_at: datetime
     address: OrderAddress
@@ -115,6 +112,7 @@ class Order(OrderBase):
     refund: Optional[OrderRefund]
     items: List[OrderItem]
     logs: List[OrderLog]
+    user: User
 
     class Config:
         orm_mode = True
