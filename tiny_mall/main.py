@@ -17,11 +17,13 @@ async def root():
     return {"message": "Hello World"}
 
 
-app.include_router(routers.user.router, tags=['用户'])
+app.include_router(routers.auth.router, tags=['认证'])
 app.include_router(routers.file.router, tags=['上传'])
 
 admin_router = APIRouter(
-    prefix='/admin', dependencies=[Depends(deps.get_current_active_admin)])
+    prefix='/admin', dependencies=[Depends(deps.get_current_admin)])
+admin_router.include_router(
+    routers.admin.user.router, tags=['admin - 用户'])
 admin_router.include_router(
     routers.admin.category.router, tags=['admin - 商品分组'])
 admin_router.include_router(

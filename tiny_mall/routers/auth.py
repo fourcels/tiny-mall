@@ -4,30 +4,17 @@ from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds, libs, deps
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/auth")
 
 
-@router.post("/register", response_model=schemas.User)
-async def register(
-    user: schemas.UserCreate,
-    db: Session = Depends(deps.get_db),
-):
-    """注册"""
-    db_user = cruds.user.get_user_by_username(db, username=user.username)
-    if db_user:
-        raise HTTPException(
-            status_code=400, detail="Username already registered")
-    return cruds.user.create_user(db=db, user=user)
-
-
-@router.post("/authenticate")
-async def authenticate(
+@router.post("/token")
+async def token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(deps.get_db),
 ):
     db_user = cruds.user.get_user_by_username(db, username=form_data.username)
 
-    if not db_user or not libs.security.verify_password(form_data.password, db_user.hashed_password):
+    if not db_user or not libs.security.verify_password(form_data.password, db_user.password):
         raise HTTPException(
             status_code=400,
             detail="Username or password invalid"
@@ -42,8 +29,8 @@ async def authenticate(
     }
 
 
-@router.get("/info", response_model=schemas.User)
-async def info(
+@router.get("/user", response_model=schemas.User)
+async def user(
     db: Session = Depends(deps.get_db),
     user: models.User = Depends(deps.get_current_user)
 ):

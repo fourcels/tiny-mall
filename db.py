@@ -18,8 +18,9 @@ def init_admin():
             user = schemas.UserCreate(
                 username=settings.admin_username,
                 password=settings.admin_password,
+                role=schemas.UserRoleEnum.superadmin,
             )
-            cruds.user.create_user(db, user, True)
+            cruds.user.create_user(db, user)
 
 
 if __name__ == '__main__':

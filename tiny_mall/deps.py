@@ -8,7 +8,7 @@ from jose.exceptions import JWTError
 from tiny_mall.database import SessionLocal
 from tiny_mall import models, libs
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/authenticate")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 # Dependency
@@ -43,8 +43,8 @@ async def get_current_active_user(current_user: models.User = Depends(get_curren
     return current_user
 
 
-async def get_current_active_admin(current_user: models.User = Depends(get_current_active_user)):
-    if not current_user.is_admin:
+async def get_current_admin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role >= 10:
         raise HTTPException(status_code=400, detail="Invalid admin")
     return current_user
 

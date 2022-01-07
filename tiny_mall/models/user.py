@@ -1,20 +1,27 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
-
+from sqlalchemy import select, func
+from sqlalchemy.orm import column_property
 from datetime import datetime
 
 from tiny_mall.models.base import Base
+from tiny_mall.models.order import Order
 
 
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
-    hashed_password = Column(String)
+    password = Column(String)
     is_active = Column(Boolean, default=True)
-    is_admin = Column(Boolean, default=False)
+    role = Column(Integer, default=10)
     balance = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.now)
-    login_at = Column(DateTime, nullable=True)
+    order_count = column_property(
+        select(func.count(Order.id)).
+        where(Order.user_id == id).
+        correlate_except(Order).
+        scalar_subquery()
+    )
 
 
 class BalanceLog(Base):

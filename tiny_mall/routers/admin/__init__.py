@@ -1,1 +1,1 @@
-from . import category, product, order
+from . import category, product, order, user
