@@ -9,7 +9,11 @@ from starlette.middleware.errors import ServerErrorMiddleware
 
 app = FastAPI()
 
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads", check_dir=False),
+    name="uploads",
+)
 
 
 @app.get("/")
