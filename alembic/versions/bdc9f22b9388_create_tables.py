@@ -1,16 +1,16 @@
-"""empty message
+"""create tables
 
-Revision ID: 352368f77aae
+Revision ID: bdc9f22b9388
 Revises: 
-Create Date: 2021-11-26 14:06:04.423512
+Create Date: 2022-01-10 19:52:40.204776
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '352368f77aae'
+revision = 'bdc9f22b9388'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,24 +21,19 @@ def upgrade():
     op.create_table('categories',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
-    sa.Column('desc', sa.String(), nullable=True),
-    sa.Column('image', sa.String(), nullable=True),
-    sa.Column('bg_image', sa.String(), nullable=True),
-    sa.Column('bg_color', sa.String(), nullable=True),
-    sa.Column('type', sa.Integer(), nullable=True),
-    sa.Column('pid', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['pid'], ['categories.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('sort', sa.Integer(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
+    op.create_index(op.f('ix_categories_sort'), 'categories', ['sort'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=True),
-    sa.Column('hashed_password', sa.String(), nullable=True),
+    sa.Column('password', sa.String(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('is_admin', sa.Boolean(), nullable=True),
+    sa.Column('role', sa.Integer(), nullable=True),
     sa.Column('balance', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('login_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
     )
@@ -67,6 +62,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('order_no', sa.BigInteger(), nullable=True),
     sa.Column('status', sa.Integer(), nullable=True),
+    sa.Column('amount', sa.Integer(), nullable=True),
+    sa.Column('remarks', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
@@ -83,10 +80,10 @@ def upgrade():
     sa.Column('sort', sa.Integer(), nullable=True),
     sa.Column('status', sa.Boolean(), nullable=True),
     sa.Column('category_id', sa.Integer(), nullable=True),
-    sa.Column('category_root_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
-    sa.ForeignKeyConstraint(['category_root_id'], ['categories.id'], ),
+    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('attrs', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_products_sort'), 'products', ['sort'], unique=False)
@@ -98,6 +95,20 @@ def upgrade():
     sa.Column('detail', sa.String(), nullable=True),
     sa.Column('order_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('order_items',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=True),
+    sa.Column('product_name', sa.String(), nullable=True),
+    sa.Column('product_sku_name', sa.String(), nullable=True),
+    sa.Column('image', sa.String(), nullable=True),
+    sa.Column('price', sa.Integer(), nullable=True),
+    sa.Column('num', sa.Integer(), nullable=True),
+    sa.Column('total_price', sa.Integer(), nullable=True),
+    sa.Column('order_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('order_logs',
@@ -125,13 +136,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('product_attrs',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('product_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('product_skus',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
@@ -140,30 +144,7 @@ def upgrade():
     sa.Column('image', sa.String(), nullable=True),
     sa.Column('sn', sa.String(), nullable=True),
     sa.Column('product_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('order_items',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('product_id', sa.Integer(), nullable=True),
-    sa.Column('product_sku_id', sa.Integer(), nullable=True),
-    sa.Column('product_name', sa.String(), nullable=True),
-    sa.Column('product_sku_name', sa.String(), nullable=True),
-    sa.Column('price', sa.Integer(), nullable=True),
-    sa.Column('num', sa.Integer(), nullable=True),
-    sa.Column('total_price', sa.Integer(), nullable=True),
-    sa.Column('order_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
-    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
-    sa.ForeignKeyConstraint(['product_sku_id'], ['product_skus.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('product_attr_values',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('value', sa.String(), nullable=True),
-    sa.Column('image', sa.String(), nullable=True),
-    sa.Column('product_attr_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['product_attr_id'], ['product_attrs.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -171,13 +152,11 @@ def upgrade():
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('product_attr_values')
-    op.drop_table('order_items')
     op.drop_table('product_skus')
-    op.drop_table('product_attrs')
     op.drop_table('order_refunds')
     op.drop_table('order_payments')
     op.drop_table('order_logs')
+    op.drop_table('order_items')
     op.drop_table('order_addresses')
     op.drop_index(op.f('ix_products_sort'), table_name='products')
     op.drop_table('products')
@@ -185,5 +164,6 @@ def downgrade():
     op.drop_table('balance_logs')
     op.drop_table('addresses')
     op.drop_table('users')
+    op.drop_index(op.f('ix_categories_sort'), table_name='categories')
     op.drop_table('categories')
     # ### end Alembic commands ###
