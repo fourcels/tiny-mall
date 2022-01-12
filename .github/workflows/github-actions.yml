@@ -27,7 +27,6 @@ jobs:
         with:
           push: true
           tags: fourcels/tiny-mall-api:latest
-          - name: executing remote ssh commands using password
       -
         name: executing remote ssh commands
         uses: appleboy/ssh-action@master
