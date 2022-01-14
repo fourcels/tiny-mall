@@ -34,6 +34,8 @@ admin_router.include_router(
     routers.admin.product.router, tags=['admin - 商品'])
 admin_router.include_router(
     routers.admin.order.router, tags=['admin - 订单'])
+admin_router.include_router(
+    routers.admin.image.router, tags=['admin - 图片'])
 app.include_router(admin_router)
 
 client_router = APIRouter(
