@@ -28,9 +28,20 @@ async def get_images(
     query = db.\
         query(models.Image).\
         order_by(
-            models.Image.id.desc()
+            models.Image.is_favorite.desc(),
+            models.Image.id.desc(),
         )
     return params.paginate(query)
+
+
+@router.patch("/{image_id}", response_model=schemas.Image)
+async def update_image(
+    image_id: int,
+    image: schemas.ImageUpdate,
+    db: Session = Depends(get_db),
+):
+    db_image = cruds.image.update_image(db, image_id, image)
+    return db_image
 
 
 @router.delete("/{image_id}")

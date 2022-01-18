@@ -12,4 +12,5 @@ class Image(Base):
     width = Column(Integer)
     height = Column(Integer)
     url = Column(String)
+    is_favorite = Column(String, default=False)
     created_at = Column(DateTime, default=datetime.now)
