@@ -22,7 +22,6 @@ async def root():
 
 
 app.include_router(routers.auth.router, tags=['认证'])
-app.include_router(routers.file.router, tags=['上传'])
 
 admin_router = APIRouter(
     prefix='/admin', dependencies=[Depends(deps.get_current_admin)])

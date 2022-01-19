@@ -49,6 +49,12 @@ async def get_current_admin(current_user: models.User = Depends(get_current_user
     return current_user
 
 
+async def get_current_superadmin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role > 1:
+        raise HTTPException(status_code=400, detail="Invalid superadmin")
+    return current_user
+
+
 class PaginateParams:
     def __init__(
         self,

@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds
-from tiny_mall.deps import PaginateParams, get_db
+from tiny_mall.deps import PaginateParams, get_current_superadmin, get_db
 
 
 router = APIRouter(prefix="/users")
 
 
-@router.post("/", response_model=schemas.User)
+@router.post("/", response_model=schemas.User, dependencies=[Depends(get_current_superadmin)])
 async def create_user(
     user: schemas.UserCreate,
     db: Session = Depends(get_db),

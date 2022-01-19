@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 
 from tiny_mall import models, schemas, cruds
-from tiny_mall.deps import PaginateParams, get_db
+from tiny_mall.deps import PaginateParams, get_current_superadmin, get_db
 
 
 router = APIRouter(prefix="/images")
 
 
-@router.post("/", response_model=schemas.Image)
+@router.post("/", response_model=schemas.Image, dependencies=[Depends(get_current_superadmin)])
 async def create_image(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),

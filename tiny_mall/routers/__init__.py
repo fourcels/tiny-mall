@@ -1,1 +1,1 @@
-from . import admin, auth, client, file
+from . import admin, auth, client
