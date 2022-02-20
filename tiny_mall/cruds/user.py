@@ -13,7 +13,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         username=user.username,
         password=libs.security.get_password_hash(user.password),
-        role=user.role.value,
+        role=user.role,
     )
     db.add(db_user)
     db.commit()

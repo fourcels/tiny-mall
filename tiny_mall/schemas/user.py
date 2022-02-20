@@ -36,6 +36,9 @@ class UserCreate(UserBase):
     password: str
     role: UserRoleEnum = UserRoleEnum.user
 
+    class Config:
+        use_enum_values = True
+
 
 class UserUpdate(BaseModel):
     password: Optional[str]
